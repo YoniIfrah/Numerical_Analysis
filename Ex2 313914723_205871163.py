@@ -157,15 +157,4 @@ def main():
             x = mulMatrix(U, y)
             print("The result of x is --> {}".format(x))
 
-#main()
-A = [[1,1,1],[2,2,2],[3,3,3]]
-B = [[1], [1],[1]]
-A = changeMat(A)
-P, L, U = getLU(A)
-print("U: {}".format(U))
-print("L: {}".format(L))
-L = inverse(L)
-y = mulMatrix(L, B)
-U = inverse(U)
-x = mulMatrix(U, y)
-print(x)
+main()
