@@ -1,5 +1,6 @@
-
-
+# Assignment 1
+# Coral Avital, id-205871163
+# Yoni Ifrah, id-313914723
 
 
 def getCofactor(matrix, i, j):
