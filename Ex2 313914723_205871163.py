@@ -2,7 +2,7 @@
 # Coral Avital, id-205871163
 # Yoni Ifrah, id-313914723
 
-#
+# return the cofactor vector
 def getCofactor(matrix, i, j):
     return [row[:j] + row[j+1:] for row in (matrix[: i] + matrix[i+1:])]
 
