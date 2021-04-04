@@ -2,17 +2,18 @@
 # Coral Avital, id-205871163
 # Yoni Ifrah, id-313914723
 
-
+#
 def getCofactor(matrix, i, j):
     return [row[:j] + row[j+1:] for row in (matrix[: i] + matrix[i+1:])]
 
-
+# retuen True if the matrix is singular.
 def isSingular(matrix):
     if getDet(matrix) != 0:
         return False
     return True
 
 
+# return the determinant of the matrix
 def getDet(matrix):
     n = len(matrix)
     if n == 2:
@@ -27,6 +28,7 @@ def getDet(matrix):
         return det
 
 
+# return True if the matrix is square
 def isSquares(matrix):
     for i in range(0, len(matrix)):
         if len(matrix) != len(matrix[i]):
@@ -34,13 +36,14 @@ def isSquares(matrix):
     return True
 
 
+# return True if we can multiply the 2 matrices we got as parameters
 def chackIfCanMul(matrix1, matrix2):
     if len(matrix1[0]) != len(matrix2):
         return False
     return True
 
 
-# we can mul two matrix when the first matrix with n*m values and the second matrix with m*n values
+# return the result of multiplying 2 matrices
 def mulMatrix(matrix1, matrix2):
     result = []
     for i in range(0, len(matrix1)):
@@ -54,6 +57,7 @@ def mulMatrix(matrix1, matrix2):
     return result
 
 
+#return the matrix after changing the rows so the matrix[0][0] index has the highest value in the columns
 def changeMat(matrix):
     max, min = matrix[0], matrix[0]
     for i in range(0, len(matrix)):
@@ -69,6 +73,7 @@ def changeMat(matrix):
     return matrix
 
 
+#return the Pivot of the matrix as a vector
 def findPivot(matrix):
     m = len(matrix)
     IDMatrix = [[float(i ==j) for i in range(m)] for j in range(m)]
@@ -80,6 +85,7 @@ def findPivot(matrix):
     return IDMatrix
 
 
+# return L, U matrices and the pivot vector
 def getLU(matrix):
     n = len(matrix)
     L = [[0.0] * n for i in range(n)]
@@ -98,12 +104,14 @@ def getLU(matrix):
     return (P, L, U)
 
 
+#
 def eliminate(row1, row2, coloumb, target=0):
     fac = (row2[coloumb] - target) / row1[coloumb]
     for i in range(len(row2)):
         row2[i] -= fac * row1[i]
 
 
+#
 def gauss(matrix):
     for i in range(len(matrix)):
         if matrix[i][i] == 0:
@@ -123,6 +131,7 @@ def gauss(matrix):
     return matrix
 
 
+# return the inverse matrix using gauss elimination
 def inverse(matrix):
     tmp = [[] for _ in matrix]
     for i, row in enumerate(matrix):
@@ -135,6 +144,7 @@ def inverse(matrix):
     return ret
 
 
+# main function
 def main():
     # A = [[1, 2, 1], [2, 6, 1], [1, 1, 4]]
     B = [[1], [2], [3], [5]]
