@@ -200,7 +200,7 @@ def mulMatrix(matrixA, matrixB):
             sum = 0
 
             for k in range(0, len(matrixA[0])):
-                sum += matrix1[i][k] * matrixB[k][j]
+                sum += matrixA[i][k] * matrixB[k][j]
             tmp.append(sum)
         result.append(tmp)
 
