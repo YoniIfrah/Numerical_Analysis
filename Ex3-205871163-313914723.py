@@ -103,7 +103,7 @@ def JacobiMethod(matrixA, matrixB):
     x2 = [0, 0, 0]
     pivote = getPivot(matrixA)
     count = 1
-    print("{}.X-->{}".format(0, x2))
+    print("X.{} --> {}".format(0, x2))
 
     while True:
         i = 0
@@ -117,7 +117,7 @@ def JacobiMethod(matrixA, matrixB):
         j += 1
         x2[i] = (matrixB[i] - matrixA[j][0] * x1[0] - matrixA[j][1] *x1[1]) / pivote[i]
 
-        print("{}.X-->{}".format(count, x2))
+        print("X.{} --> {}".format(count, x2))
         count += 1
 
         if abs(x2[0] - x1[0]) < 0.00001:
