@@ -327,33 +327,35 @@ def main():
         print("Which method do you wish to solve with?\nPress 1 --> for Jacobi\nPress 2 --> Gauss-Seidel\nPress another key to EXIT\n")
         choice = input()
 
-
         if choice == "1":
-            print("The system gonna to check if the matrix have dominant diagonal")
+            print("\n----------------------------------------")
+            print("The system will solve the problem with Jacobi way")
+
             if DominantDiagonal(matrixA):
-                print("The system gonna to solve the problem with Jacobi and the dominant diagonal")
+                print("The matrix have dominant diagonal!\nThe system will solve the problem")
                 JacobiMethod(matrixA, matrixB)
             else:
-                print("The system of the matrix does not converge!\nchecking with her norm vector if it converge...")
+                print("The matrix have dominant diagonal!\nThe system will check if the matrix is converge with the norm vector")
+
                 if (getConvergeJacobi(matrixA)):
-                    print("The system gonna to solve the problem with Jacobi and the norm vector")
+                    print("Although there is no dominant diagonal the results are:")
                     JacobiMethod(matrixA, matrixB)
                 else:
                     print("Cannot calculate! the matrix is not converge...")
 
-
         elif choice == "2":
-            print("The system gonna to check if the matrix have dominant diagonal")
+            print("\n----------------------------------------")
+            print("The system will solve the problem with Gauss way")
 
             if DominantDiagonal(matrixA):
-                print("The system gonna to solve the problem with Gauss and the dominant diagonal")
+                print("The matrix have dominant diagonal!\nThe system will solve the problem")
                 GaussSeidelMethod(matrixA, matrixB)
 
             else:
-                print("The system of the matrix does not converge!\nchecking with her norm vector if it converge...")
+                print("The matrix have dominant diagonal!\nThe system will check if the matrix is converge with the norm vector")
 
                 if getConvergeGauss(matrixA):
-                    print("The system gonna to solve the problem with Gauss and the norm vector")
+                    print("Although there is no dominant diagonal the results are:")
                     GaussSeidelMethod(matrixA, matrixB)
 
                 else:
