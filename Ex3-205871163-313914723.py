@@ -290,13 +290,13 @@ def main():
                     print("cannot calculate! the matrix is not converge...")
         elif choice=="2":
             print("The system gonna to check if the matrix have dominant diagonal")
-            if DominantDiagonal(A):
-                print("The system gonna to solve the problem with Jacobi and the dominant diagonal")
+            if  DominantDiagonal(A):
+                print("The system gonna to solve the problem with Gauss and the dominant diagonal")
                 GaussSeidelMethod(A,B)
             else:
                 print("The system of the matrix does not converge!\nchecking with her norm vector if it converge...")
                 if (getConvergeGauss(A)):
-                    print("The system gonna to solve the problem with Jacobi and the norm vector")
+                    print("The system gonna to solve the problem with Gauss and the norm vector")
                     GaussSeidelMethod(A, B)
                 else:
                     print("cannot calculate! the matrix is not converge...")
