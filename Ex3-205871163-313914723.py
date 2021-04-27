@@ -255,7 +255,7 @@ def getConvergeGauss(A):
 
 def getConvergeJacobi(A):
     L,U,D=getLUD(A)
-    G=mulMatrix(negativeMat(inverse(D),(inverse(plusMatrix(L,U)))))
+    G=mulMatrix(negativeMat(inverse(D),((plusMatrix(L,U)))))
     #G=[[1,2],[-3,4]]
     if getNorm(G)<1:
         print("Although the matrix does not have a dominant diagonal we can calculate with the help of Jacobi")
