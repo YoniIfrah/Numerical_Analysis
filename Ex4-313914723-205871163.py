@@ -93,7 +93,8 @@ def main():
     # order to insert x we will do
     f = lambdify(x, f)
     fTag = lambdify(x, fTag)
-
+    startPoint = 3.0
+    endPoint = 4.0
 
 
     while True:
@@ -104,7 +105,7 @@ def main():
         if choice == "1":
             funcRange = []
             derivativeRange = []
-            funcRange, derivativeRange = findRange(f, fTag, 1, 2)
+            funcRange, derivativeRange = findRange(f, fTag, startPoint, endPoint)
             if funcRange and derivativeRange:  # check if we got range
                 result=[]
                 for i in range(0,len(funcRange),2):
@@ -127,8 +128,6 @@ def main():
 
         elif choice == "2":
             result=[]
-            startPoint=3.0
-            endPoint=4.0
             i=0.0
             while(startPoint+i<endPoint):
                 if Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) not in result and Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) != None:
@@ -137,7 +136,8 @@ def main():
                 i+=0.001
             print("result: ",result)
         elif choice == "3":
-            print("result: ", Secant_Method(f,fTag,3,4,0.0001))
+
+            print("result: ", Secant_Method(f,fTag,startPoint,endPoint,0.0001))
         else:
             print("Goodbye!")
             break
