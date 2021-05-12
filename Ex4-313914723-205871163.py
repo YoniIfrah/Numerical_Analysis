@@ -4,6 +4,7 @@
 # Name: Coral Avital - ID: 205871163
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
+from math import cos
 
 """
 the function running by 0.1 steps to find if the function change sign from x to limit
@@ -72,8 +73,20 @@ def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
 
 
 
-def Secant_Method(f,fTag,startPoint,endPoint,eps):
-    pass
+def Secant_Method(f,startPoint,endPoint,eps):
+    counter=1
+    Xr=startPoint
+    Xr1=endPoint
+    while Xr1-Xr<eps:
+
+
+
+
+        counter+=1
+    if round(f(Xr),6) == 0:
+        return round(Xr,6)
+    elif round(f(Xr1),6) == 0:
+        return round(Xr1,6)
 
 
 
@@ -136,8 +149,13 @@ def main():
                 i+=0.001
             print("result: ",result)
         elif choice == "3":
-
-            print("result: ", Secant_Method(f,fTag,startPoint,endPoint,0.0001))
+            result=[]
+            i=0.0
+            while(startPoint+i<endPoint):
+                if Secant_Method(f,startPoint,endPoint,0.0001) not in result and Secant_Method(f,startPoint,endPoint,0.0001) != None:
+                    result.append(Secant_Method(f,startPoint,endPoint,0.0001))
+            i+=0.001
+            print("result: ",result)
         else:
             print("Goodbye!")
             break
