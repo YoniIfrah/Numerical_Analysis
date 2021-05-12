@@ -6,32 +6,27 @@ import sympy as sp
 from sympy.utilities.lambdify import lambdify
 from math import cos
 
-"""
-the function running by 0.1 steps to find if the function change sign from x to limit
-when x is the start point and finish at limit
-@:param:lambda: f, lambda: fTag, int: x, int: limit
-@:returns: list: llist, list: llist2
-"""
-def findRange(f,fTag,x,limit):
+def findRangeForFunction(f,x,limit):
     llist = []
-    llist2 = []
-    counter = 1
     while (x <= limit):
 #        print("f(x1):", f(x))
 #        print("f(x2):", f(x + 0.1))
         if (f(x) * f(x + 0.1) < 0):
             llist.append(round(x,3))
             llist.append(round(x + 0.1,3))
-        if (fTag(x)*fTag(x+0.1)<0):
-            llist2.append(round(x,3))
-            llist2.append(round(x + 0.1,3))
-#        print("counter = ", counter)
-        counter += 1
         x += 0.1
     #print("{}".format(llist))
     #print("{}".format(llist2))
-    return (llist,llist2)
+    return llist
 
+def findRangeForDerivative(fTag,x,limit):
+    llist2=[]
+    while (x <= limit):
+        if (fTag(x)*fTag(x+0.1)<0):
+            llist2.append(round(x,3))
+            llist2.append(round(x + 0.1,3))
+        x += 0.1
+    return llist2
 
 
 
@@ -41,9 +36,7 @@ def Bisection_Method(f,startPoint,endPoint,eps):
     while(endPoint - startPoint)>eps:
         counter+=1
         c=(startPoint+endPoint)/2
-        print("-----------------------------------------")
-        print("Iteration: {},\nstart point: {},\tend point: {},\tc: {}".format(counter,startPoint,endPoint,c))
-        print("f(startPoint): {},\tf(endPoint): {},\tf(c): {}\n ABS(startPoint-c): {}".format(f(startPoint),f(endPoint),f(c),abs(startPoint-c)))
+        print("Iteration: ",counter)
         if f(startPoint)*f(c)>0:
             startPoint=c
         else:
@@ -53,7 +46,11 @@ def Bisection_Method(f,startPoint,endPoint,eps):
 
 def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
     Xr=(endPoint+startPoint)/2
-    Xr1=Xr-(f(Xr)/fTag(Xr))
+    if fTag(Xr) != 0:
+        Xr1 = Xr - (f(Xr) / fTag(Xr))
+    else:
+        print("Please wait trying  closer range")
+        return None
     counter=1
     if f(startPoint)<0 and f(endPoint)>0 or not f(startPoint)<0 and not f(endPoint)>0:
         while(Xr1-Xr<eps):
@@ -73,20 +70,33 @@ def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
 
 
 
+
 def Secant_Method(f,startPoint,endPoint,eps):
+    #f=lambda x:x**3-cos(x)
+    result=[]
     counter=1
     Xr=startPoint
     Xr1=endPoint
-    while Xr1-Xr<eps:
-
-
-
-
+    tmp=0
+    while True:
+        if round(f(Xr),4)==0:
+            return round(Xr,4)
+        tmp=Xr
+        Xr=Xr1
+        Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
+        print("Iteration: ",counter)
         counter+=1
-    if round(f(Xr),6) == 0:
-        return round(Xr,6)
-    elif round(f(Xr1),6) == 0:
-        return round(Xr1,6)
+        if counter == 100:
+            print("Error! didn't find result in that range after 100 tries")
+            break
+
+    if round(f(startPoint),6) == 0:
+         return startPoint
+    elif round(f(endPoint),6) == 0:
+         return endPoint
+
+    return result
+
 
 
 
@@ -95,9 +105,9 @@ def Secant_Method(f,startPoint,endPoint,eps):
 
 def main():
     x=sp.symbols('x')
-    #f = x**4+x**3-3*x**2
+    f = x**4+x**3-3*x**2
     #f=x**3-x-1
-    f=4*x**3-48*x+5
+    #f=4*x**3-48*x+5
 
     fTag=f.diff(x)
     print('our function -->', f)
@@ -106,7 +116,7 @@ def main():
     # order to insert x we will do
     f = lambdify(x, f)
     fTag = lambdify(x, fTag)
-    startPoint = 3.0
+    startPoint = -4.0
     endPoint = 4.0
 
 
@@ -118,18 +128,24 @@ def main():
         if choice == "1":
             funcRange = []
             derivativeRange = []
-            funcRange, derivativeRange = findRange(f, fTag, startPoint, endPoint)
+            funcRange = findRangeForFunction(f,startPoint,endPoint)
+            derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
             if funcRange and derivativeRange:  # check if we got range
                 result=[]
                 for i in range(0,len(funcRange),2):
-                    result.append(Bisection_Method(f,funcRange[i],funcRange[i+1],0.0001))
+                    answer= Bisection_Method(f,funcRange[i],funcRange[i+1],0.0001)
+                    if answer not in result and answer != None:
+                        result.append(answer)
 
                 for i in range (0,len(derivativeRange),2):
-                    result.append(Bisection_Method(fTag,derivativeRange[i],derivativeRange[i+1],0.0001))
+                    answer = Bisection_Method(fTag,derivativeRange[i],derivativeRange[i+1],0.0001)
+                    if answer not in result and answer != None:
+                        result.append(answer)
+                #from now we are removing the incorrect answers we got in result
                 n=len(result)
                 i=0
                 while(i<n or not result):# i<n or if list is not empty
-                    if not f(result[i])>-0.0001 and f(result[i])<0.0001:
+                    if  not -0.01 < f(result[i]) < 0.01:
                         del result[i]
                         n-=1
                         i=0
@@ -137,32 +153,42 @@ def main():
                         i+=1
                 print("result: ",result)
             else:
-                print("ERROR! no range found")
+                print("ERROR! no result found in that range found")
 
         elif choice == "2":
             result=[]
-            i=0.0
-            while(startPoint+i<endPoint):
-                if Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) not in result and Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) != None:
-                    result.append(Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001))
+            funcRange = []
+            derivativeRange = []
+            funcRange = findRangeForFunction(f,startPoint,endPoint)
+            derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
+            for i in range(0, len(funcRange), 2):
+                answer = Newton_Raphson(f,fTag,funcRange[i],funcRange[i+1],0.0001)
+                if  answer not in result and answer != None:
+                    result.append(answer)
+            for i in range(0, len(derivativeRange), 2):
+                answer = Newton_Raphson(f,fTag,derivativeRange[i],derivativeRange[i+1],0.0001)
+                if  answer not in result and answer != None:
+                    result.append(answer)
+            if result:
+                print("result: ", result)
+            else:
+                print("No result found!")
 
-                i+=0.001
-            print("result: ",result)
         elif choice == "3":
             result=[]
-            i=0.0
-            while(startPoint+i<endPoint):
-                if Secant_Method(f,startPoint,endPoint,0.0001) not in result and Secant_Method(f,startPoint,endPoint,0.0001) != None:
-                    result.append(Secant_Method(f,startPoint,endPoint,0.0001))
-            i+=0.001
-            print("result: ",result)
+            funcRange = []
+            funcRange = findRangeForFunction(f,startPoint,endPoint)
+            for i in range(0, len(funcRange), 2):
+                answer = Secant_Method(f,funcRange[i],funcRange[i+1],0.0001)
+                if  answer not in result and answer != None:
+                    result.append(answer)
+            if result:
+                print("result: ", result)
+            else:
+                print("No result found!")
+
         else:
             print("Goodbye!")
             break
-
-
-
-
-
 
 main()
