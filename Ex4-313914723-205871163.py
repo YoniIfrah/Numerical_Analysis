@@ -50,10 +50,29 @@ def Bisection_Method(f,startPoint,endPoint,eps):
     return round(c, 5)
 
 
-def Newton_Raphson():
-    pass
+def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
+    Xr=(endPoint+startPoint)/2
+    Xr1=Xr-(f(Xr)/fTag(Xr))
+    counter=1
+    if f(startPoint)<0 and f(endPoint)>0 or not f(startPoint)<0 and not f(endPoint)>0:
+        while(Xr1-Xr<eps):
+            print("Iteration: ",counter)
+            if(round(f(Xr),6)==0):
+                print("found", round(Xr,6))
+                return round(Xr,6)
+            Xr=Xr1
+            Xr1=Xr-(f(Xr)/fTag(Xr))
+            counter+=1
+    else:
+        print("Error! no result in that range")
+    if (round(f(startPoint), 6) == 0):
+        return startPoint
+    elif (round(f(endPoint), 6) == 0):
+        return endPoint
 
-def Secant_Method():
+
+
+def Secant_Method(f,fTag,startPoint,endPoint,eps):
     pass
 
 
@@ -64,11 +83,13 @@ def Secant_Method():
 def main():
     x=sp.symbols('x')
     #f = x**4+x**3-3*x**2
-    f=x**3-x-1
+    #f=x**3-x-1
+    f=4*x**3-48*x+5
+
     fTag=f.diff(x)
     print('our function -->', f)
     print('our function after derivative -->', fTag)
-    print("range: max is 2 and the minimum is 1")
+    print("range: max is 4 and the minimum is 3")
     # order to insert x we will do
     f = lambdify(x, f)
     fTag = lambdify(x, fTag)
@@ -105,10 +126,18 @@ def main():
                 print("ERROR! no range found")
 
         elif choice == "2":
-            for i in range(0,len(funcRange),2):
-                Newton_Raphson(f,funcRange[i],funcRange[i+1],0.0001)
+            result=[]
+            startPoint=3.0
+            endPoint=4.0
+            i=0.0
+            while(startPoint+i<endPoint):
+                if Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) not in result and Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001) != None:
+                    result.append(Newton_Raphson(f,fTag,startPoint+i,endPoint,0.0001))
+
+                i+=0.001
+            print("result: ",result)
         elif choice == "3":
-            pass
+            print("result: ", Secant_Method(f,fTag,3,4,0.0001))
         else:
             print("Goodbye!")
             break
