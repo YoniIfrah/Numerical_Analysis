@@ -141,22 +141,22 @@ def Secant_Method(f,startPoint,endPoint,eps):
     counter=1
     funcRange = findRangeForFunction(f, startPoint, endPoint)
     for i in range(0, len(funcRange), 2):
-        Xr=funcRange[i]
-        Xr1=funcRange[i+1]
-        tmp=0
-        while Xr!=Xr1:# this condition is to not get devision by zero
+        tmp=funcRange[i]
+        Xr=funcRange[i+1]
+        Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
+
+        while Xr1-Xr<eps:
             if round(f(Xr),4)==0:
                 if round(Xr,4) not in result:
                     print("found: ", round(Xr,4))
                     result.append(round(Xr,4))
             tmp=Xr
             Xr=Xr1
+            if (f(Xr)-f(tmp))==0:# this condition is to not get devision by zero
+                break
             Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
             print("Iteration: ",counter)
             counter+=1
-            if counter == 100:
-                print("Error! didn't find result in that range after 100 tries")
-                break
 
         if round(f(funcRange[i]),6) == 0:
              result.append(funcRange[i])
@@ -176,9 +176,9 @@ we will check on the function if the points are intersecting the axis
 """
 def main():
     x=sp.symbols('x')
-    f = x**4+x**3-3*x**2
+    #f = x**4+x**3-3*x**2
     #f=x**3-x-1
-    #f=4*x**3-48*x+5
+    f=4*x**3-48*x+5
 
     fTag=f.diff(x)
     print('our function -->', f)
@@ -223,7 +223,7 @@ def main():
                 print("No result found!")
 
         elif choice == "3":
-            result=Secant_Method(f,startPoint,endPoint,0.0001)
+            result=Secant_Method(f,startPoint,endPoint,0.001)
             if result:
                 print("result: ", result)
             else:
