@@ -5,7 +5,13 @@
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
 from math import cos
-
+"""
+Finds the suspected points and intersecting a function on the axis
+@:param: lambda,  f 
+@:param: float, x
+@:param float, limit
+@:return: list, llist
+"""
 def findRangeForFunction(f,x,limit):
     llist = []
     while (x <= limit):
@@ -19,6 +25,13 @@ def findRangeForFunction(f,x,limit):
     #print("{}".format(llist2))
     return llist
 
+"""
+Finds the suspected points and intersecting a function derivative on the axis
+@:param: lambda,  fTag 
+@:param: float, x
+@:param float, limit
+@:return: list, llist
+"""
 def findRangeForDerivative(fTag,x,limit):
     llist2=[]
     while (x <= limit):
@@ -30,7 +43,14 @@ def findRangeForDerivative(fTag,x,limit):
 
 
 
-
+"""
+The function finds us the existing intersection points on the axis with Bisection method
+@:param:lambda, f
+@:param:float, startPoint
+@:param:float, endPoint
+@:param:float, eps
+@:return:list, result
+"""
 def Bisection_Method(f,fTag,startPoint,endPoint,eps):
     result=[]
     funcRange = []
@@ -71,7 +91,15 @@ def Bisection_Method(f,fTag,startPoint,endPoint,eps):
         else:
             i += 1
     return result
-
+"""
+The function finds us the existing intersection point  on the axis with Newton method
+notice - only one point then we run again from the main function
+@:param:lambda, f
+@:param:float, startPoint
+@:param:float, endPoint
+@:param:float, eps
+@:return:list, result
+"""
 def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
     Xr=(endPoint+startPoint)/2
     if fTag(Xr) != 0:
@@ -98,7 +126,14 @@ def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
 
 
 
-
+"""
+The function finds us the existing intersection points on the axis with Secant method
+@:param:lambda, f
+@:param:float, startPoint
+@:param:float, endPoint
+@:param:float, eps
+@:return:list, result
+"""
 def Secant_Method(f,startPoint,endPoint,eps):
     #f=lambda x:x**3-cos(x)
     funcRange = []
@@ -135,7 +170,10 @@ def Secant_Method(f,startPoint,endPoint,eps):
 
 
 
-
+"""
+main function that declaring f the function we will work on and the start point and end point 
+we will check on the function if the points are intersecting the axis
+"""
 def main():
     x=sp.symbols('x')
     f = x**4+x**3-3*x**2
