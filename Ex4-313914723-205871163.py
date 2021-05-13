@@ -223,7 +223,7 @@ def main():
                 print("No result found!")
 
         elif choice == "3":
-            result=Secant_Method(f,startPoint,endPoint,0.001)
+            result=Secant_Method(f,startPoint,endPoint,0.01)
             if result:
                 print("result: ", result)
             else:
