@@ -31,18 +31,46 @@ def findRangeForDerivative(fTag,x,limit):
 
 
 
-def Bisection_Method(f,startPoint,endPoint,eps):
-    counter=0
-    while(endPoint - startPoint)>eps:
-        counter+=1
-        c=(startPoint+endPoint)/2
-        print("Iteration: ",counter)
-        if f(startPoint)*f(c)>0:
-            startPoint=c
+def Bisection_Method(f,fTag,startPoint,endPoint,eps):
+    result=[]
+    funcRange = []
+    derivativeRange = []
+    counter = 0
+    funcRange = findRangeForFunction(f, startPoint, endPoint)
+    derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
+    if  funcRange and derivativeRange:
+        for i in range(0, len(funcRange), 2):
+            while(funcRange[i+1] - funcRange[i])>eps:
+                counter+=1
+                c=(funcRange[i]+funcRange[i+1])/2
+                print("Iteration: ",counter)
+                if f(funcRange[i])*f(c)>0:
+                    funcRange[i]=c
+                else:
+                    funcRange[i+1]=c
+            if round(c, 5) not in result:
+                 result.append(round(c, 5))
+        for i in range(0, len(derivativeRange), 2):
+            while(derivativeRange[i+1] - derivativeRange[i])>eps:
+                counter+=1
+                c=(derivativeRange[i]+derivativeRange[i+1])/2
+                print("Iteration: ",counter)
+                if f(derivativeRange[i])*f(c)>0:
+                    derivativeRange[i]=c
+                else:
+                    derivativeRange[i+1]=c
+            if round(c, 5) not in result:
+                 result.append(round(c, 5))
+    n = len(result)
+    i = 0
+    while (i < n and n!=0):  # i<n or if list is not empty
+        if not -0.01 < f(result[i]) < 0.01:
+            del result[i]
+            n -= 1
+            i = 0
         else:
-            endPoint=c
-    return round(c, 5)
-
+            i += 1
+    return result
 
 def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
     Xr=(endPoint+startPoint)/2
@@ -73,27 +101,32 @@ def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
 
 def Secant_Method(f,startPoint,endPoint,eps):
     #f=lambda x:x**3-cos(x)
+    funcRange = []
     result=[]
     counter=1
-    Xr=startPoint
-    Xr1=endPoint
-    tmp=0
-    while True:
-        if round(f(Xr),4)==0:
-            return round(Xr,4)
-        tmp=Xr
-        Xr=Xr1
-        Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
-        print("Iteration: ",counter)
-        counter+=1
-        if counter == 100:
-            print("Error! didn't find result in that range after 100 tries")
-            break
+    funcRange = findRangeForFunction(f, startPoint, endPoint)
+    for i in range(0, len(funcRange), 2):
+        Xr=funcRange[i]
+        Xr1=funcRange[i+1]
+        tmp=0
+        while Xr!=Xr1:# this condition is to not get devision by zero
+            if round(f(Xr),4)==0:
+                if round(Xr,4) not in result:
+                    print("found: ", round(Xr,4))
+                    result.append(round(Xr,4))
+            tmp=Xr
+            Xr=Xr1
+            Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
+            print("Iteration: ",counter)
+            counter+=1
+            if counter == 100:
+                print("Error! didn't find result in that range after 100 tries")
+                break
 
-    if round(f(startPoint),6) == 0:
-         return startPoint
-    elif round(f(endPoint),6) == 0:
-         return endPoint
+        if round(f(funcRange[i]),6) == 0:
+             result.append(funcRange[i])
+        elif round(f(funcRange[i+1]),6) == 0:
+             result.append(funcRange[i+1])
 
     return result
 
@@ -112,7 +145,7 @@ def main():
     fTag=f.diff(x)
     print('our function -->', f)
     print('our function after derivative -->', fTag)
-    print("range: max is 4 and the minimum is 3")
+    print("range: max is 4 and the minimum is -4")
     # order to insert x we will do
     f = lambdify(x, f)
     fTag = lambdify(x, fTag)
@@ -126,34 +159,11 @@ def main():
             "Which method do you wish to solve with?\nPress 1 --> Bisection Method\nPress 2 --> Newton Raphson\nPress 3 --> Secant_Method\nPress another key to EXIT\n")
         choice = input()
         if choice == "1":
-            funcRange = []
-            derivativeRange = []
-            funcRange = findRangeForFunction(f,startPoint,endPoint)
-            derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
-            if funcRange and derivativeRange:  # check if we got range
-                result=[]
-                for i in range(0,len(funcRange),2):
-                    answer= Bisection_Method(f,funcRange[i],funcRange[i+1],0.0001)
-                    if answer not in result and answer != None:
-                        result.append(answer)
-
-                for i in range (0,len(derivativeRange),2):
-                    answer = Bisection_Method(fTag,derivativeRange[i],derivativeRange[i+1],0.0001)
-                    if answer not in result and answer != None:
-                        result.append(answer)
-                #from now we are removing the incorrect answers we got in result
-                n=len(result)
-                i=0
-                while(i<n or not result):# i<n or if list is not empty
-                    if  not -0.01 < f(result[i]) < 0.01:
-                        del result[i]
-                        n-=1
-                        i=0
-                    else:
-                        i+=1
-                print("result: ",result)
+            result = Bisection_Method(f, fTag, startPoint, endPoint, 0.0001)
+            if result:
+                print("result: ", result)
             else:
-                print("ERROR! no result found in that range found")
+                print("No result found!")
 
         elif choice == "2":
             result=[]
@@ -175,17 +185,12 @@ def main():
                 print("No result found!")
 
         elif choice == "3":
-            result=[]
-            funcRange = []
-            funcRange = findRangeForFunction(f,startPoint,endPoint)
-            for i in range(0, len(funcRange), 2):
-                answer = Secant_Method(f,funcRange[i],funcRange[i+1],0.0001)
-                if  answer not in result and answer != None:
-                    result.append(answer)
+            result=Secant_Method(f,startPoint,endPoint,0.0001)
             if result:
                 print("result: ", result)
             else:
                 print("No result found!")
+
 
         else:
             print("Goodbye!")
