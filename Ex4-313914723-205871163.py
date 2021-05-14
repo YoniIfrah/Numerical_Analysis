@@ -88,8 +88,9 @@ def Bisection_Method(f1, f1Tag, startPoint, endPoint, eps):
                 else:
                     range_list_f[i + 1] = x_m
 
-            if round(x_m, 4) not in result:
-                result.append(round(x_m, 4))
+            if round(x_m, 6) not in result:
+                print("x: ", round(x_m, 6))
+                result.append(round(x_m, 6))
 
         for i in range(0, len(range_list_fT), 2):
 
@@ -107,6 +108,7 @@ def Bisection_Method(f1, f1Tag, startPoint, endPoint, eps):
                     range_list_fT[i + 1] = x_m
 
             if round(x_m, 4) not in result:
+                print("x: ", round(x_m, 4))
                 result.append(round(x_m, 4))
 
     n = len(result)
@@ -118,6 +120,7 @@ def Bisection_Method(f1, f1Tag, startPoint, endPoint, eps):
             i = 0
         else:
             i += 1
+
     return result
 
 
@@ -144,9 +147,11 @@ def Newton_Raphson(f2, f2Tag, startPoint, endPoint, eps):
     counter = 1
 
     if round(f2(startPoint), 5) == 0:
+        print("x: ", round(startPoint, 4))
         return round(x_r, 5)
 
     elif round(f2(endPoint), 5) == 0:
+        print("x: ", round(endPoint, 4))
         return endPoint
 
 
@@ -158,6 +163,7 @@ def Newton_Raphson(f2, f2Tag, startPoint, endPoint, eps):
             print("Iteration: ", counter)
 
             if round(f2(x_r), 5) == 0:
+                print("x: ", round(x_r, 6))
                 return round(x_r, 6)
 
             counter += 1
@@ -191,14 +197,13 @@ def Secant_Method(f3, startPoint, endPoint, eps):
 
             print("Iteration: ", counter)
             if round(f3(x_r), 6) == 0:
-                print("Solution number", counter, " is: ", round(x_r, 6))
+                print("x: ", round(x_r, 6))
                 result_list.append(round(x_r, 6))
 
             last_r = x_r
             x_r = x_next
             x_next = (last_r * f3(x_r) - x_r * f3(last_r)) / (f3(x_r) - f3(last_r))
             counter += 1
-
     return result_list
 
 
