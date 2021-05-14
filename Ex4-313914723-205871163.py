@@ -2,236 +2,321 @@
 # By:
 # Name: Yoni Ifrah - ID: 313914723
 # Name: Coral Avital - ID: 205871163
+
+from math import cos
 import sympy as sp
 from sympy.utilities.lambdify import lambdify
-from math import cos
-"""
-Finds the suspected points and intersecting a function on the axis
-@:param: lambda,  f 
-@:param: float, x
-@:param float, limit
-@:return: list, llist
-"""
-def findRangeForFunction(f,x,limit):
-    llist = []
-    while (x <= limit):
-#        print("f(x1):", f(x))
-#        print("f(x2):", f(x + 0.1))
-        if (f(x) * f(x + 0.1) < 0):
-            llist.append(round(x,3))
-            llist.append(round(x + 0.1,3))
-        x += 0.1
-    #print("{}".format(llist))
-    #print("{}".format(llist2))
-    return llist
+# epsilon value for all the calculate
+eps = 0.0000001
 
-"""
-Finds the suspected points and intersecting a function derivative on the axis
-@:param: lambda,  fTag 
-@:param: float, x
-@:param float, limit
-@:return: list, llist
-"""
-def findRangeForDerivative(fTag,x,limit):
-    llist2=[]
-    while (x <= limit):
-        if (fTag(x)*fTag(x+0.1)<0):
-            llist2.append(round(x,3))
-            llist2.append(round(x + 0.1,3))
-        x += 0.1
-    return llist2
+# A function for finding the values that cause the function to change a mark
+def find_range_f(f, startPoint, endPoint):
+    """
+        Finds the suspected points and intersecting a function on the axis
+        @:param: lambda,  f
+        @:param: float, startPoint
+        @:param float, endPoint
+        @:return: list, rannge_list_f
+    """
+    # We run for all the point between the start point and the last point with jumps of 0.1
+    rannge_list_f = []
+
+    # While there are still range between the start point to the end point
+    while endPoint >= startPoint:
+        if f(startPoint) * f(startPoint + 0.1) < 0:
+            rannge_list_f.append(round(startPoint, 3))
+            rannge_list_f.append(round(startPoint + 0.1, 3))
+        startPoint += 0.1
+
+    # Returns two lists that hold the values when they are placed to change the function
+    return rannge_list_f
 
 
+def find_range_fT(fTag, startPoint, endPoint):
+    """
+        Finds the suspected points and intersecting a function derivative on the axis
+        @:param: lambda,  fTag
+        @:param: float, startPoint
+        @:param: float, endPoint
+        @:return: list, range_list_fT
+    """
+    range_list_fT = []
+    while endPoint >= startPoint:
+        if fTag(startPoint) * fTag(startPoint + 0.1) < 0:
+            range_list_fT.append(round(startPoint, 3))
+            range_list_fT.append(round(startPoint + 0.1, 3))
+        startPoint += 0.1
 
-"""
-The function finds us the existing intersection points on the axis with Bisection method
-@:param:lambda, f
-@:param:float, startPoint
-@:param:float, endPoint
-@:param:float, eps
-@:return:list, result
-"""
-def Bisection_Method(f,fTag,startPoint,endPoint,eps):
-    result=[]
-    funcRange = []
-    derivativeRange = []
+    # Returns two lists that hold the values when they are placed to change the function
+    return range_list_fT
+
+
+# part one
+def Bisection_Method(f1, f1Tag, startPoint, endPoint, eps):
+    """
+        The function finds us the existing intersection points on the axis with Bisection method
+        @:param: lambda, f1
+        @:param: lambda, f1Tag
+        @:param: float, startPoint
+        @:param: float, endPoint
+        @:param: float, eps
+        @:return: list, result
+    """
+
+    #integer counter for print the iteration
     counter = 0
-    funcRange = findRangeForFunction(f, startPoint, endPoint)
-    derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
-    if  funcRange and derivativeRange:
-        for i in range(0, len(funcRange), 2):
-            while(funcRange[i+1] - funcRange[i])>eps:
-                counter+=1
-                c=(funcRange[i]+funcRange[i+1])/2
-                print("Iteration: ",counter)
-                if f(funcRange[i])*f(c)>0:
-                    funcRange[i]=c
+
+    range_list_f = find_range_f(f1, startPoint, endPoint)
+    range_list_fT = find_range_fT(f1Tag, startPoint, endPoint)
+
+    result = []
+
+    if range_list_f and range_list_fT:
+        for i in range(0, len(range_list_f), 2):
+
+            #Whilw loop that run until the difference between the end point and the start point is greater than epsilon
+            while (range_list_f[i + 1] - range_list_f[i]) > eps:
+
+                x_m = (range_list_f[i] + range_list_f[i + 1]) / 2
+
+                counter += 1
+                print("Iteration: ", counter)
+
+                if f1(range_list_f[i]) * f1(x_m) > 0:
+                    range_list_f[i] = x_m
+
                 else:
-                    funcRange[i+1]=c
-            if round(c, 5) not in result:
-                 result.append(round(c, 5))
-        for i in range(0, len(derivativeRange), 2):
-            while(derivativeRange[i+1] - derivativeRange[i])>eps:
-                counter+=1
-                c=(derivativeRange[i]+derivativeRange[i+1])/2
-                print("Iteration: ",counter)
-                if f(derivativeRange[i])*f(c)>0:
-                    derivativeRange[i]=c
+                    range_list_f[i + 1] = x_m
+
+            if round(x_m, 4) not in result:
+                result.append(round(x_m, 4))
+
+        for i in range(0, len(range_list_fT), 2):
+
+            #Whilw loop that run until the difference between the end point and the start point is greater than epsilon
+            while (range_list_fT[i + 1] - range_list_fT[i]) > eps:
+
+                x_m = (range_list_fT[i] + range_list_fT[i + 1]) / 2
+
+                counter += 1
+                print("Iteration: ", counter)
+
+                if f1(range_list_fT[i]) * f1(x_m) > 0:
+                    range_list_fT[i] = x_m
                 else:
-                    derivativeRange[i+1]=c
-            if round(c, 5) not in result:
-                 result.append(round(c, 5))
+                    range_list_fT[i + 1] = x_m
+
+            if round(x_m, 4) not in result:
+                result.append(round(x_m, 4))
+
     n = len(result)
     i = 0
-    while (i < n and n!=0):  # i<n or if list is not empty
-        if not -0.01 < f(result[i]) < 0.01:
+    while i < n and n != 0:  # i<n or if list is not empty
+        if not -0.1 < f1(result[i]) < 0.1:
             del result[i]
             n -= 1
             i = 0
         else:
             i += 1
     return result
-"""
-The function finds us the existing intersection point  on the axis with Newton method
-notice - only one point then we run again from the main function
-@:param:lambda, f
-@:param:float, startPoint
-@:param:float, endPoint
-@:param:float, eps
-@:return:list, result
-"""
-def Newton_Raphson(f,fTag,startPoint,endPoint,eps):
-    Xr=(endPoint+startPoint)/2
-    if fTag(Xr) != 0:
-        Xr1 = Xr - (f(Xr) / fTag(Xr))
+
+
+# part two
+def Newton_Raphson(f2, f2Tag, startPoint, endPoint, eps):
+    """
+        The function finds us the existing intersection point  on the axis with Newton method
+        notice - only one point then we run again from the main function
+        @:param: lambda, f2
+        @:param: lambda, f2Tag
+        @:param: float, startPoint
+        @:param: float, endPoint
+        @:param: float, eps
+        @:return: list, result
+    """
+
+    x_r = (endPoint + startPoint) / 2
+    if f2(x_r) != 0:
+        x_next = x_r - (f2(x_r) / f2Tag(x_r))
     else:
         print("Please wait trying  closer range")
         return None
-    counter=1
-    if f(startPoint)<0 and f(endPoint)>0 or not f(startPoint)<0 and not f(endPoint)>0:
-        while(Xr1-Xr<eps):
-            print("Iteration: ",counter)
-            if(round(f(Xr),6)==0):
-                print("found", round(Xr,6))
-                return round(Xr,6)
-            Xr=Xr1
-            Xr1=Xr-(f(Xr)/fTag(Xr))
-            counter+=1
-    else:
-        print("Error! no result in that range")
-    if (round(f(startPoint), 6) == 0):
-        return startPoint
-    elif (round(f(endPoint), 6) == 0):
+
+    counter = 1
+
+    if round(f2(startPoint), 5) == 0:
+        return round(x_r, 5)
+
+    elif round(f2(endPoint), 5) == 0:
         return endPoint
 
 
+    if f2(startPoint) > 0 and f2(endPoint) < 0 or f2(startPoint) < 0 and f2(endPoint) > 0:
+        #A while loop that checks when the range between the two numbers is less than eps
+        while x_next - x_r < eps:
+            # Do it if the condition is not met
 
-"""
-The function finds us the existing intersection points on the axis with Secant method
-@:param:lambda, f
-@:param:float, startPoint
-@:param:float, endPoint
-@:param:float, eps
-@:return:list, result
-"""
-def Secant_Method(f,startPoint,endPoint,eps):
-    #f=lambda x:x**3-cos(x)
-    funcRange = []
-    result=[]
-    counter=1
-    funcRange = findRangeForFunction(f, startPoint, endPoint)
-    for i in range(0, len(funcRange), 2):
-        tmp=funcRange[i]
-        Xr=funcRange[i+1]
-        Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
+            print("Iteration: ", counter)
 
-        while Xr1-Xr<eps:
-            if round(f(Xr),4)==0:
-                if round(Xr,4) not in result:
-                    print("found: ", round(Xr,4))
-                    result.append(round(Xr,4))
-            tmp=Xr
-            Xr=Xr1
-            if (f(Xr)-f(tmp))==0:# this condition is to not get devision by zero
-                break
-            Xr1=((tmp*f(Xr))-Xr*(f(tmp)))/(f(Xr)-f(tmp))
-            print("Iteration: ",counter)
-            counter+=1
+            if round(f2(x_r), 5) == 0:
+                return round(x_r, 6)
 
-        if round(f(funcRange[i]),6) == 0:
-             result.append(funcRange[i])
-        elif round(f(funcRange[i+1]),6) == 0:
-             result.append(funcRange[i+1])
-
-    return result
+            counter += 1
+            x_r = x_next
+            x_next = x_r - (f2(x_r) / f2Tag(x_r))
+    else:
+        print("Error! The function does not converge")
 
 
+# part tree
+def Secant_Method(f3, startPoint, endPoint, eps):
+    """
+        The function finds us the existing intersection points on the axis with Secant method
+        @:param:lambda, f3
+        @:param:float, startPoint
+        @:param:float, endPoint
+        @:param:float, eps
+        @:return:list, result
+    """
+
+    result_list = []
+    counter = 1
+
+    range_list = find_range_f(f3, startPoint, endPoint)
+
+    for i in range(0, len(range_list), 2):
+        x_r = range_list[i]
+        x_next = range_list[i + 1]
+
+        while abs(x_next - x_r) > eps:
+
+            print("Iteration: ", counter)
+            if round(f3(x_r), 6) == 0:
+                print("Solution number", counter, " is: ", round(x_r, 6))
+                result_list.append(round(x_r, 6))
+
+            last_r = x_r
+            x_r = x_next
+            x_next = (last_r * f3(x_r) - x_r * f3(last_r)) / (f3(x_r) - f3(last_r))
+            counter += 1
+
+    return result_list
 
 
-
-
-"""
-main function that declaring f the function we will work on and the start point and end point 
-we will check on the function if the points are intersecting the axis
-"""
+# main function
 def main():
-    x=sp.symbols('x')
-    #f = x**4+x**3-3*x**2
-    #f=x**3-x-1
-    f=4*x**3-48*x+5
 
-    fTag=f.diff(x)
-    print('our function -->', f)
-    print('our function after derivative -->', fTag)
-    print("range: max is 4 and the minimum is -4")
-    # order to insert x we will do
-    f = lambdify(x, f)
-    fTag = lambdify(x, fTag)
-    startPoint = -4.0
-    endPoint = 4.0
+    # x symbol
+    x = sp.symbols('x')
 
+    startPoint = 0
+    endPoint = 0
 
+    # While the user entered number between 1 to 3
+    # If he inserted another character the loop will stop
     while True:
         print("----------------------------------------")
-        print(
-            "Which method do you wish to solve with?\nPress 1 --> Bisection Method\nPress 2 --> Newton Raphson\nPress 3 --> Secant_Method\nPress another key to EXIT\n")
+        print("Hello !\nWhich method do you wish to solve with?\nPress 1 --> Bisection Method\n"
+        "Press 2 --> Newton Raphson\nPress 3 -->Secant_Method\nPress another key to EXIT\n")
         choice = input()
+
         if choice == "1":
-            result = Bisection_Method(f, fTag, startPoint, endPoint, 0.0001)
-            if result:
-                print("result: ", result)
+            print("\n----------------------------------------")
+            print("Bisection Method")
+
+            # The function for part 1
+            f1 = x ** 4 + x ** 3 - 3 * x ** 2
+            # A new variable that holds the derivative of the function
+            f1Tag = f1.diff(x)
+            print('our function -->', f1)
+            print('our function after derivative -->', f1Tag)
+
+            # order to insert x we will do
+            f1 = lambdify(x, f1)
+            f1Tag = lambdify(x, f1Tag)
+
+
+            startPoint = -3.0
+            endPoint = 2.0
+            result_list = Bisection_Method(f1, f1Tag, startPoint, endPoint, eps)
+            if result_list:
+                print("----------------------------------------")
+                print("The results of the function are: ", result_list)
+
             else:
                 print("No result found!")
 
         elif choice == "2":
-            result=[]
-            funcRange = []
-            derivativeRange = []
-            funcRange = findRangeForFunction(f,startPoint,endPoint)
-            derivativeRange = findRangeForDerivative(fTag, startPoint, endPoint)
-            for i in range(0, len(funcRange), 2):
-                answer = Newton_Raphson(f,fTag,funcRange[i],funcRange[i+1],0.0001)
-                if  answer not in result and answer != None:
-                    result.append(answer)
-            for i in range(0, len(derivativeRange), 2):
-                answer = Newton_Raphson(f,fTag,derivativeRange[i],derivativeRange[i+1],0.0001)
-                if  answer not in result and answer != None:
-                    result.append(answer)
-            if result:
-                print("result: ", result)
+            print("\n----------------------------------------")
+            print("Newton Raphson")
+
+            # The function for part 2
+            # f2 = 4 * x ** 3 - 48 * x + 5
+            f2 = x ** 3 - x - 1
+            # A new variable that holds the derivative of the function
+            f2Tag = f2.diff(x)
+
+            print('our function -->', f2)
+            print('our function after derivative -->', f2Tag)
+
+            # order to insert x we will do
+            f2 = lambdify(x, f2)
+            f2Tag = lambdify(x, f2Tag)
+
+            result_list = []
+
+            startPoint = 1.0
+            endPoint = 2.0
+
+            range_list_f = find_range_f(f2,  startPoint, endPoint)
+            range_list_fT = find_range_fT(f2Tag, startPoint, endPoint)
+
+            for i in range(0, len(range_list_f), 2):
+                answer = Newton_Raphson(f2, f2Tag, range_list_f[i], range_list_f[i+1], eps)
+                if answer not in result_list and answer is not None:
+                    result_list.append(answer)
+
+            for i in range(0, len(range_list_fT), 2):
+                answer = Newton_Raphson(f2, f2Tag, startPoint, endPoint, eps)
+                if answer not in result_list and answer is not None:
+                    result_list.append(answer)
+
+            if result_list:
+                print("----------------------------------------")
+                print("The results of the function are: ", result_list)
+
             else:
                 print("No result found!")
 
         elif choice == "3":
-            result=Secant_Method(f,startPoint,endPoint,0.01)
-            if result:
-                print("result: ", result)
+
+            print("\n----------------------------------------")
+            print("Secant Method")
+            y = sp.cos
+
+            # The function for part 3
+            f3 = x ** 3 - y(x)
+            print('our function -->', f3)
+            # order to insert x we will do
+            f3 = lambdify(x, f3)
+
+            startPoint = 0.0
+            endPoint = 1.0
+
+            result_list = Secant_Method(f3, startPoint, endPoint, eps)
+            if result_list:
+                print("----------------------------------------")
+                print("The results of the function are: ", result_list)
+
             else:
                 print("No result found!")
 
-
         else:
+            print("\n----------------------------------------")
             print("Goodbye!")
+            print("\n----------------------------------------")
+            # stop the loop
             break
 
+
+# Call to main function
 main()
