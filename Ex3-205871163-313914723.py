@@ -4,6 +4,7 @@
 # Name: Coral Avital - ID: 205871163
 
 
+
 def fixMatrix(matrix):
     """
     return the matrix that he got with the height value in the pivot indexes
