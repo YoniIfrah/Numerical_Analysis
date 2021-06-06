@@ -227,7 +227,7 @@ def main():
 
 
     while True:
-        print("Which method do you wish to solve with?\nPress 1 --> for Linear\nPress 2 --> Polynomial\nPress 3 --> for Lagrange\nPress 4 for Neville\nPress another key to EXIT\n")
+        print("Which method do you wish to solve with?\nPress 1 --> for Linear\nPress 2 --> Polynomial\nPress 3 --> for Lagrange\nPress 4 --> for Neville\nPress another key to EXIT\n")
         choice = input()
 
         if choice == "1":
