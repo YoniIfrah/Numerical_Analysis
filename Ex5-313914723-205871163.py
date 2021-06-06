@@ -95,7 +95,7 @@ def findXandY(Xpoint, chart):
 
 def Linear(Xpoint,chart):
     x1, x2, y1, y2 = findXandY(Xpoint, chart)
-    return ((y1-y2)/(x1-x2))*Xpoint+(y2*x1-y1*x2)/(x1-x2)
+    return round(((y1-y2)/(x1-x2))*Xpoint+(y2*x1-y1*x2)/(x1-x2),4)
 
 
 
@@ -180,14 +180,19 @@ def Neville(Xpoint, chart):
 
 
 def main():
-    #define  chart and point
-    Xpoint = 2.5
+    #define  charts and points
+    Xpoint1 = 2.5
+    Xpoint3 = 3
+    Xpoint4 = 1.5
 
     #define 2D chart with numbers of x value and y value
     chart = [[0, 1, 2, 3, 4, 5, 6], [0, 0.8415, 0.9093, 0.1411, -0.7568, -0.9589, -0.2794]]
+    chart2 = [[1, 2, 3], [0.8415, 0.9093, 0.1411]]
+    chart3 = [[1, 2, 4], [1, 0, 1.5]]
+    chart4 = [[1, 1.3, 1.6, 1.9, 2.2], [0.7651, 0.6200, 0.4554, 0.2818, 0.1103]]
 
-    print("our point to find -->", Xpoint)
-    print("our table of points -->", chart)
+    print("Linear and Polynomial points -->", Xpoint1,", Lagrange point -->", Xpoint3,", Neville point -->", Xpoint4)
+    print("Linear chart -->", chart,", Polynomial chart -->", chart2,"\nLagrange chart -->", chart3,", Neville chart -->", chart4)
 
 
     while True:
@@ -195,19 +200,17 @@ def main():
         choice = input()
 
         if choice == "1":
-            print("result:",Linear(Xpoint, chart))
+            print("result:",Linear(Xpoint1, chart))
 
         elif choice == "2":
-            print("result:",Polynomial(Xpoint, chart))
+            print("result:",Polynomial(Xpoint1, chart2))
 
         elif choice == "3":
-            print("result:",Lagrange(Xpoint, chart))
-
+            print("result:",Lagrange(Xpoint3, chart3))
 
         elif choice == "4":
-            chart = [[1, 1.3, 1.6, 1.9, 2.2], [0.7651, 0.6200, 0.4554, 0.2818, 0.1103]]
-            Xpoint = 1.5
-            print("result:", Neville(Xpoint, chart))
+            result = Neville(Xpoint4, chart4)
+            print("result:", round(result,4))
 
         else:
             print("Goodbye!")
