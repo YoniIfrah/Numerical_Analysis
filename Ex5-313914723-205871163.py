@@ -76,6 +76,13 @@ def mulMatrix(matrixA, matrixB):
     return result
 
 def findXandY(Xpoint, chart):
+    """
+    Finding the minimum and the maximum number that close to Xpoint.
+    According to the chat in that case the function will return int.
+    :param Xpoint: float, the point we want to find
+    :param chart:list, table that include x and y values
+    :return: int, the closest x to Xpoint ansd their y according to the chart
+    """
     # find x1 and x2
     for i in chart[0]:
         if Xpoint > chart[0][i]:
@@ -88,19 +95,27 @@ def findXandY(Xpoint, chart):
     y1 = chart[1][x1]
     y2 = chart[1][x2]
 
-    #print to test
-    print("x1:{} y1:{} x2:{} y2:{}".format(x1, y1, x2, y2))
-
     return (x1, x2, y1, y2)
 
 def Linear(Xpoint,chart):
+    """
+    Finding Xpoint value with linear method by using the chart
+    :param Xpoint: float, the point we want to find
+    :param chart:list, table that include x and y values
+    :return: float, the value between the point using linear method
+    """
     x1, x2, y1, y2 = findXandY(Xpoint, chart)
     return round(((y1-y2)/(x1-x2))*Xpoint+(y2*x1-y1*x2)/(x1-x2),4)
 
 
 
 def Polynomial(Xpoint,chart):
-    #chart = [[ 1, 2, 3], [ 0.8415, 0.9093, 0.1411]]
+    """
+    Finding Xpoint from the chart we got by using polynomial method
+    :param Xpoint: float, the point we want to find
+    :param chart:list, table that include x and y values
+    :return: float, the result of the polynomail
+    """
     N = len (chart[0])
     #declare matrix with all values is 1
     matrix = [[1 for i in range(N)] for j in range(N)]
@@ -137,8 +152,13 @@ def Polynomial(Xpoint,chart):
 
 
 def Lagrange(Xpoint, chart):
-    Xpoint = 3
-    #chart = [[1, 2, 4], [1, 0, 1.5]]
+    """
+    Finding the point using lagrange method
+    :param Xpoint:float, the point we want to find
+    :param chart:list, table that include x and y values
+    :return:float, summ
+    """
+
     new_list = []
     N = len(chart[0])
 
@@ -165,6 +185,12 @@ def Lagrange(Xpoint, chart):
 
 
 def Neville(Xpoint, chart):
+    """
+    Using recursion for Neville method
+    :param Xpoint:float, the point we want to find
+    :param chart:list, table that include x and y values
+    :return: float, the polynomial of degree n
+    """
 
     n = len(chart[0])
     p = n * [0]
@@ -180,6 +206,11 @@ def Neville(Xpoint, chart):
 
 
 def main():
+    """
+    Here we got each X (Xpoint) and data table (chart) for each method.
+    The solution will be display according to the input otherwise the program will be closed
+    :return: None
+    """
     #define  charts and points
     Xpoint1 = 2.5
     Xpoint3 = 3
