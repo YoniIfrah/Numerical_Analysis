@@ -136,6 +136,49 @@ def Polynomial(Xpoint,chart):
     return round(result,4)
 
 
+def Lagrange(Xpoint, chart):
+    Xpoint = 3
+    #chart = [[1, 2, 4], [1, 0, 1.5]]
+    new_list = []
+    N = len(chart[0])
+
+    #declaring new list from our chart for lagrange method
+    for i in range(N):
+        tmp_list=[]
+        tmp_list.append(chart[0][i])
+        tmp_list.append(chart[1][i])
+        new_list.append(tmp_list)
+
+    #lagrange method
+    summ = 0
+    result = []
+    tmp = 1
+    for i in range(len(new_list)):
+        for j in range(len(new_list)):
+            if i != j:
+                tmp *= (Xpoint - new_list[j][0]) / (new_list[i][0] - new_list[j][0])
+        result.append(tmp)
+        tmp = 1
+    for i in range(N):
+        summ += result[i] * new_list[i][1]
+    return summ
+
+
+def Neville(Xpoint, chart):
+
+    n = len(chart[0])
+    p = n * [0]
+    for k in range(n):
+        for i in range(n - k):
+            if k == 0:
+                p[i] = chart[1][i]
+            else:
+                p[i] = ((Xpoint - chart[0][i + k]) * p[i] + \
+                        (chart[0][i] - Xpoint) * p[i + 1]) / \
+                       (chart[0][i] - chart[0][i + k])
+    return p[0]
+
+
 def main():
     #define  chart and point
     Xpoint = 2.5
@@ -158,9 +201,14 @@ def main():
             print("result:",Polynomial(Xpoint, chart))
 
         elif choice == "3":
-            pass
+            print("result:",Lagrange(Xpoint, chart))
+
+
         elif choice == "4":
-            pass
+            chart = [[1, 1.3, 1.6, 1.9, 2.2], [0.7651, 0.6200, 0.4554, 0.2818, 0.1103]]
+            Xpoint = 1.5
+            print("result:", Neville(Xpoint, chart))
+
         else:
             print("Goodbye!")
             break
